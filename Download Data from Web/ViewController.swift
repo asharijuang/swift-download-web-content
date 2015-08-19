@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var webView: UIWebView!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -21,7 +22,18 @@ class ViewController: UIViewController {
             // kondisi ketika selesai download data
             if let urlContent = data {
                 // jika ada data maka jadikan sebagai urlContent
-                print(urlContent)
+                
+                // data pada urlcontent maih ter encode, agar mudah dibaca kita perlu me-encode
+                let webContent = NSString(data: urlContent, encoding: NSUTF8StringEncoding)
+                
+                print(webContent)
+                
+                // terkadang butuh waktu cukup lama, jadi kita perlu membuatnya agar sync
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    // sekarang tampilkan pada webview
+                    self.webView.loadHTMLString(String(webContent), baseURL: nil)
+                })
+                
             }else {
                 // jika ada error
             }
